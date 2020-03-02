@@ -37,7 +37,7 @@
 		}
 	},
 	"scripts": {
-		"test": "vendor/bin/phpunit Tests"
+		"test": "vendor/bin/phpunit tests"
 	},
 	"version": "2.3.0"
 }
