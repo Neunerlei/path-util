@@ -1,37 +1,58 @@
-File Path Utility
-=================
-
-[![Build Status](https://travis-ci.org/webmozart/path-util.svg?branch=master)](https://travis-ci.org/webmozart/path-util)
-[![Build status](https://ci.appveyor.com/api/projects/status/d5uuypr6p162gpxf/branch/master?svg=true)](https://ci.appveyor.com/project/webmozart/path-util/branch/master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/webmozart/path-util/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/webmozart/path-util/?branch=master)
-[![Latest Stable Version](https://poser.pugx.org/webmozart/path-util/v/stable.svg)](https://packagist.org/packages/webmozart/path-util)
-[![Total Downloads](https://poser.pugx.org/webmozart/path-util/downloads.svg)](https://packagist.org/packages/webmozart/path-util)
-[![Dependency Status](https://www.versioneye.com/php/webmozart:path-util/2.3.0/badge.svg)](https://www.versioneye.com/php/webmozart:path-util/2.3.0)
-
-Latest release: [2.3.0](https://packagist.org/packages/webmozart/path-util#2.3.0)
-
-PHP >= 5.3.3
+# File Path Utility (FORKED)
 
 This package provides robust, cross-platform utility functions for normalizing,
 comparing and modifying file paths and URLs.
 
-Installation
-------------
+**ATTENTION: This is a fork of [path-util](https://github.com/webmozart/path-util) by [webmozart](https://github.com/webmozart)!**
+
+```PHP >= 7.3.0```
+
+## What's different?
+
+- Removed "Url" utility and replaced it with [URI by PHP League](https://uri.thephpleague.com/)
+- Added new methods to the Path class
+- Added tests for the new methods
+- Updated PHP dependency to 7.3.0
+- Updated existing code to use PHP Type Hints
+- Updated tests to work with the modified code (Mostly to support the Type Hints)
+- Removed dependency on "webmozart/assert"
+- The Path class is no longer a "final" class
+- All private methods of the Path class are now "protected"
+- Removed build related files
+
+## Installation
 
 The utility can be installed with [Composer]:
 
 ```
-$ composer require webmozart/path-util
+$ composer require neunerlei/path-util
 ```
 
-Usage
------
-
+## Basic Usage
 Use the `Path` class to handle file paths:
 
 ```php
-use Webmozart\PathUtil\Path;
+use Neunerlei\PathUtil\Path;
 
+// These methods are added by this fork
+// ==========================================================
+echo Path::unifySlashes("\\foo/bar\\baz");
+// => /foo/bar/baz (on linux) or \foo\bar\baz (on windows)
+
+echo Path::unifyPath("\\foo/bar\\baz");
+// => /foo/bar/baz/ (on linux) or \foo\bar\baz\ (on windows)
+
+echo Path::classBasename(\Neunerlei\PathUtil\Path::class);
+// => Path
+
+echo Path::classNamespace(\Neunerlei\PathUtil\Path::class);
+// => Neunerlei\PathUtil
+
+$link = Path::makeUri();
+// => Returns a new Uri object -> See "URI" Section for details.
+
+// Those methods were already in the base implementation
+// ==========================================================
 echo Path::canonicalize('/var/www/vhost/webmozart/../config.ini');
 // => /var/www/vhost/config.ini
 
@@ -88,56 +109,55 @@ Path::getHomeDirectory();
 // => /home/webmozart
 ```
 
-Use the `Url` class to handle URLs:
+## URI handling
+When using the ```Path::makeLink()``` method you can supply a single parameter that will be used as a base for the generated link object. 
+Possible parameter options are:
 
-```php
-use Webmozart\PathUtil\Url;
+- string: A url represented by a string
+- instance: An object that implements \League\Uri\Contracts\UriInterface or Psr\Http\Message\UriInterface
+- TRUE: Let the script figure out the url based on the current $_SERVER super-global
+- array: The result of parse_url() or a similarly constructed array
 
-echo Url::makeRelative('http://example.com/css/style.css', 'http://example.com/puli');
-// => ../css/style.css
+If no parameter is given an empty Uri object is returned. The method uses the [League\Uri](https://uri.thephpleague.com/uri/6.0/) package under the hood.
+The result of the method is an instance of a [PSR-7](https://www.php-fig.org/psr/psr-7/) compliant URI object.
 
-echo Url::makeRelative('http://cdn.example.com/css/style.css', 'http://example.com/puli');
-// => http://cdn.example.com/css/style.css
-```
+## Base Package documentation
+Learn more about the forked **base package** in the [Documentation]. 
 
-Learn more in the [Documentation] and the [API Docs].
-
-Authors
--------
+## Authors
 
 * [Bernhard Schussek] a.k.a. [@webmozart]
 * [The Community Contributors]
+* [Martin Neundorfer](https://www.neunerlei.eu) 
 
-Documentation
--------------
-
-Read the [Documentation] if you want to learn more about the contained functions.
-
-Contribute
-----------
+## Contribute
 
 Contributions are always welcome!
 
 * Report any bugs or issues you find on the [issue tracker].
 * You can grab the source code at the [Git repository].
 
-Support
--------
-
-If you are having problems, send a mail to bschussek@gmail.com or shout out to
-[@webmozart] on Twitter.
-
-License
--------
+## License
 
 All contents of this package are licensed under the [MIT license].
 
+## Special Thanks
+Special thanks goes to the folks at [LABOR.digital](https://labor.digital/) (which is the word german for laboratory and not the english "work" :D) for making it possible to publish my code online.
+
+## Postcardware
+You're free to use this package, but if it makes it to your production environment I highly appreciate you sending me a postcard from your hometown, mentioning which of our package(s) you are using.
+
+You can find my address [here](https://www.neunerlei.eu/). 
+
+Thank you :D 
+
+
 [Bernhard Schussek]: http://webmozarts.com
-[The Community Contributors]: https://github.com/webmozart/path-util/graphs/contributors
+[The Community Contributors]: https://github.com/neunerlei/path-util/graphs/contributors
 [Composer]: https://getcomposer.org
-[Documentation]: docs/usage.md
 [API Docs]: https://webmozart.github.io/path-util/api/latest/class-Webmozart.PathUtil.Path.html
-[issue tracker]: https://github.com/webmozart/path-util/issues
-[Git repository]: https://github.com/webmozart/path-util
+[Documentation]: https://github.com/webmozart/path-util/docs/usage.md
+[issue tracker]: https://github.com/neunerlei/path-util/issues
+[Git repository]: https://github.com/neunerlei/path-util
 [@webmozart]: https://twitter.com/webmozart
 [MIT license]: LICENSE
