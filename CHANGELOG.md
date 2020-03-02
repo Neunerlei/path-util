@@ -1,3 +1,14 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## 2.4.0 (2020-03-02)
+
+
+### Features
+
+* initial changes after forking the repository ([d6fff26](https://github.com/Neunerlei/path-util/commit/d6fff2656a9f39dc672160f17dea36054d441db3))
+
 Changelog
 =========
 
